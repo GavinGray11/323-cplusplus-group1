@@ -1,9 +1,7 @@
-#include <iostream>
 
 int main() {
-  std::cout << "Hellow World. Matheo was here.dsadsadas" << endl;
-  std::cout << "Hellow World. Matheo was here again" << endl;
-
+cout << "Hellow World" << endl;
+cout << "Jacob" << endl;
+cout <<"Matheo" << endl;
   return 0;
-
 }
