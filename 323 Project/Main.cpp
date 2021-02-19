@@ -1,19 +1,30 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include "functions.hpp"
 
 using namespace std;
 
 int main() {
 
-    fstream newfile;
-    newfile.open("Text.txt", ios::in); //open a file to perform read operation using file object
-    if (newfile.is_open()) {   //checking whether the file is open
-        string tp;
-        while (getline(newfile, tp)) {  //read data from file object and put it into string.
-            cout << tp << "\n";   //print the data of the string
+
+   
+    vector<TokenStruct> tokens;
+    string fileInput;
+    fstream infile;
+    infile.open("Text.txt", ios::in);                      
+    if (infile.is_open()) {                                   
+        while (getline(infile, fileInput)) {                      
+            
+            tokens = Lexer(fileInput);
+
+            // display the tokens to the screen
+            //ofstream outFile;
+            //outFile.open("outputLEX.txt");
+            for (unsigned i = 0; i < tokens.size(); i++)
+            {
+               cout << tokens[i].lexemeName << "  \t"
+                    << tokens[i].token << endl;  
+            }
         }
-        newfile.close();   //close the file object.
+        infile.close();                                       
     }
     return 0;
 }

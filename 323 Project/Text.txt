@@ -1,1 +1,4 @@
-Hello World
+while (fahr < upper) a = 23.00 whileend
+!hellow world!    
+hello < while
+1
