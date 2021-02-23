@@ -1,8 +1,8 @@
 #include "functions.hpp"
 
 
-
-/*                           Keyword,    identifier,  seperator,  operator,   integer,    real,      space,     unknown      IGNORE*/
+                             /*Collumns*/
+/*               rows        Keyword,    identifier,  seperator,  operator,   integer,    real,      space,     unknown      IGNORE*/
 int stateTable[][10] = { {0, KEYWORD,    IDENTIFIER,  SEPERATOR,  OPERATOR,   INTEGER,    REAL,      SPACE,     UNKNOWN,     IGNORE},
 /* STATE 1 */   {KEYWORD,    KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  IDENTIFIER, KILLSTATE, KILLSTATE, IDENTIFIER,  IGNORE},
 /* STATE 2 */   {IDENTIFIER, KILLSTATE,  IDENTIFIER,  KILLSTATE,  KILLSTATE,  IDENTIFIER, KILLSTATE, KILLSTATE, IDENTIFIER,  IGNORE},
@@ -11,79 +11,69 @@ int stateTable[][10] = { {0, KEYWORD,    IDENTIFIER,  SEPERATOR,  OPERATOR,   IN
 /* STATE 5 */   {INTEGER,    KILLSTATE,  KILLSTATE,   REAL,       KILLSTATE,  INTEGER,    KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 6 */   {REAL,       KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  REAL,       KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 7 */   {SPACE,      KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
-/* STATE 8 */   {UNKNOWN,    KILLSTATE,  UNKNOWN,     KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, UNKNOWN,     IGNORE},
-/* STATE 9 */   {IGNORE,     IGNORE,     IGNORE,      IGNORE,     IGNORE,     IGNORE,     IGNORE,    IGNORE,    IGNORE,      UNKNOWN}};
+/* STATE 8 */   {UNKNOWN,    KILLSTATE,  IDENTIFIER,  KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, UNKNOWN,     IGNORE},
+/* STATE 9 */   {IGNORE,     IGNORE,     IGNORE,      IGNORE,     IGNORE,     IGNORE,     IGNORE,    IGNORE,    IGNORE,      IGNORE}};
 
-vector<TokenStruct> Lexer(string expression)
+vector<TokenStruct> Lexer(string file)
 {
     TokenStruct tokenObjectFound;
     vector<TokenStruct> tokens;
-    char currentChar = ' ';
-    int col = KILLSTATE;
-    int currentState = KILLSTATE;
+    char currentChar;
+    int columnState = KILLSTATE;    // columns
+    int currentState = KILLSTATE;   // rows
     int prevState = KILLSTATE;
-    string currentToken = "";
+    string currentToken;
 
    
-    for (unsigned i = 0; i < expression.length();)
+    for (unsigned i = 0; i < file.length();)
     {
-        currentChar = expression[i];
+        currentChar = file[i];
+        columnState = Get_FSM_Col(currentChar);
+        currentState = stateTable[currentState][columnState];
 
-       
-        col = Get_FSM_Col(currentChar);
-
-        
-        currentState = stateTable[currentState][col];
-
-       
-        if (currentState == KILLSTATE)
-        {
-            if (prevState != SPACE) 
-            {
+       // Stays at a UNKNOWN state until it hits a KILLSTATE meaning a token was found
+        if (currentState == KILLSTATE) {
+            if (prevState != SPACE) {
                 
                 tokenObjectFound.token = currentToken;
                 if (findKeywords(tokenObjectFound.token)) {
-                    tokenObjectFound.lexeme = KEYWORD;
+                    tokenObjectFound.tokenType = KEYWORD;
                 }
                 else {
-                    tokenObjectFound.lexeme = prevState;
+                    tokenObjectFound.tokenType = prevState;
                 }
                 
-                tokenObjectFound.lexemeName = GetLexemeName(tokenObjectFound.lexeme);
+                tokenObjectFound.tokenName = GetLexemeName(tokenObjectFound.tokenType);
                 tokens.push_back(tokenObjectFound);
             }
             currentToken = "";
-        }
-        else
-        {
+        } 
+        else {
             currentToken += currentChar;
             i++;
         }
         prevState = currentState;
 
     }
-    // this ensures the last token gets saved when
-    // we reach the end of the loop (if a valid token exists)
-    if (currentState != SPACE && currentToken != "")
-    {// ^^ we dont care about whitespace
+    // stores the last token of the for loop that reads in the string
+    if (currentState != SPACE && currentToken != "") {
         tokenObjectFound.token = currentToken;
         if (findKeywords(tokenObjectFound.token)) {
-            tokenObjectFound.lexeme = KEYWORD;
+            tokenObjectFound.tokenType = KEYWORD;
         }
         else {
-            tokenObjectFound.lexeme = currentState;
+            tokenObjectFound.tokenType = currentState;
         }
 
-        tokenObjectFound.lexemeName = GetLexemeName(tokenObjectFound.lexeme);
+        tokenObjectFound.tokenName = GetLexemeName(tokenObjectFound.tokenType);
         tokens.push_back(tokenObjectFound);
     }
     return tokens;
 }
 
 int Get_FSM_Col(char currentChar) {
-    // check for whitespace
-    if (isspace(currentChar))
-    {
+    
+    if (isspace(currentChar)) {
         return SPACE;
     }
     else if (findOperator(currentChar)) {
@@ -105,8 +95,7 @@ int Get_FSM_Col(char currentChar) {
     return UNKNOWN;
 }
 string GetLexemeName(int lexeme) {
-    switch (lexeme)
-    {
+    switch (lexeme) {
     case KEYWORD:
         return "KEYWORD";
         break;
@@ -141,8 +130,7 @@ string GetLexemeName(int lexeme) {
 }
 
 bool findOperator(char opper) {
-    switch (opper)
-    {
+    switch (opper) {
     case '*':
         return true;
         break;
@@ -174,8 +162,7 @@ bool findOperator(char opper) {
 }
 
 bool findSeperator(char seperator) {
-    switch (seperator)
-    {
+    switch (seperator) {
     case '(':
         return true;
         break;
@@ -237,8 +224,7 @@ bool findIdentifier(char ident) {
 }
 
 bool findInteger(char integer) {
-    switch (integer)
-    {
+    switch (integer) {
     case '0':
         return true;
         break;

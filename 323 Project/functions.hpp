@@ -8,8 +8,8 @@ using namespace std;
 
 struct TokenStruct {
     string token;
-    int lexeme;
-    string lexemeName;
+    int tokenType;
+    string tokenName;
 };
 
 enum FSM
@@ -27,10 +27,10 @@ enum FSM
 };
 
 
-//function defs
+// function defs
 vector<TokenStruct> Lexer(string expression);
 int Get_FSM_Col(char currentChar);
-string GetLexemeName(int lexeme);
+string GetLexemeName(int tokenType);
 bool findOperator(char opper);
 bool findSeperator(char seperator);
 bool findKeywords(string keyword);
