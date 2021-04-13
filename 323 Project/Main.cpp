@@ -28,11 +28,19 @@ int main() {
             
             tokens = Lexer(fileInput);
 
-            for (unsigned i = 0; i < tokens.size(); i++)
+            /*for (unsigned i = 0; i < tokens.size(); i++)
             {
                out << tokens[i].tokenName << " \t" << "=" << " \t"
                    << tokens[i].token << endl;  
-            }
+            }*/
+        }
+        TokenStruct dollarSign;
+         dollarSign.token = "$";
+         dollarSign.tokenName = "$"; //compare this
+         dollarSign.tokenType = 1;
+        tokens.push_back(dollarSign);
+        if (Parser(tokens)) {
+            cout << "the code worked";
         }
         infile.close();  
         out.close();

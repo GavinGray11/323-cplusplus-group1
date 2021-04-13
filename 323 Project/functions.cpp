@@ -8,7 +8,7 @@ int stateTable[][10] = { {0, KEYWORD,    IDENTIFIER,  SEPERATOR,  OPERATOR,   IN
 /* STATE 2 */   {IDENTIFIER, KILLSTATE,  IDENTIFIER,  KILLSTATE,  KILLSTATE,  IDENTIFIER, KILLSTATE, KILLSTATE, IDENTIFIER,  IGNORE},
 /* STATE 3 */   {SEPERATOR,  KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  REAL,      KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 4 */   {OPERATOR,   KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
-/* STATE 5 */   {INTEGER,    KILLSTATE,  KILLSTATE,   REAL,       KILLSTATE,  INTEGER,    KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
+/* STATE 5 */   {INTEGER,    KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  INTEGER,    KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 6 */   {REAL,       KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  REAL,       KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 7 */   {SPACE,      KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 8 */   {UNKNOWN,    KILLSTATE,  IDENTIFIER,  KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, UNKNOWN,     IGNORE},
@@ -68,9 +68,30 @@ vector<TokenStruct> Lexer(string file)
         tokenObjectFound.tokenName = GetLexemeName(tokenObjectFound.tokenType);
         tokens.push_back(tokenObjectFound);
     }
+
+    vector<int> toDelete;
+  for (int i = 2; i < tokens.size(); i++) {
+      bool check = false;
+        if (tokens[i].tokenType == INTEGER && i > 1) {
+            for (int j = i-1; j >= 0; j--) {
+                if (tokens[j].token == "." || tokens[j].tokenType == INTEGER) {
+                    tokens[i].token = tokens[j].token + tokens[i].token;
+                    check = true;
+                    toDelete.push_back(j);
+                }
+            }
+        }
+        if (check == true) {
+            tokens[i].tokenName = "REAL";
+            tokens[i].tokenType = REAL;
+        }
+    }
+  for (int i = 0; i < toDelete.size(); i++) {
+      tokens.erase(tokens.begin() + toDelete[i]);
+  }
+
     return tokens;
 }
-
 int Get_FSM_Col(char currentChar) {
     
     if (isspace(currentChar)) {
@@ -260,3 +281,55 @@ bool findInteger(char integer) {
         break;
     }
 }
+
+bool Parser(vector<TokenStruct> v) {
+    TokenStruct dollarSign;
+   // dollarSign.token = "$";
+  //  dollarSign.tokenName = "$"; //compare this
+  //  dollarSign.tokenType = 1;
+
+
+    stack <string> order;
+    cout << endl;
+   // v.push_back(dollarSign);
+    order.push("$");
+    order.push("E");
+    int i = 0;
+    while (true) {
+        if (v[i].tokenName == order.top()) {
+            return true;
+        }
+        else if (order.top() == "E") {
+            order.pop();
+            order.push("E'");
+            order.push("T");
+
+        }
+        else if (order.top() == "T") {
+            if (v[i].tokenType == 2 || v[i].tokenType == 5 || v[i].tokenType == 6) {
+                order.pop();
+                i++;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (order.top() == "E'"){
+            if (v[i].tokenType == 4) {
+                i++;
+                order.push("E'");
+                order.push("T");
+            }
+            else if (v[i].tokenName == "$") {
+                order.pop();
+            }
+            else {
+                cout << "no operator after ID";
+                return false;
+            }
+
+        }
+    }
+    
+}
+

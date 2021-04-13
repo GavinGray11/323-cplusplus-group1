@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string> 
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -37,6 +38,9 @@ bool findKeywords(string keyword);
 bool findIdentifier(char ident);
 bool findInteger(char integer);
 
+
+//determines if syntax is correct
+bool Parser(vector<TokenStruct> v);
 
 
 
