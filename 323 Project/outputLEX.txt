@@ -1,18 +1,23 @@
 IDENTIFIER 	= 	a
-
-Successful run!
+<Statement> -> <Assign>
+<Assign> -> <ID> = <Expression>
 OPERATOR 	= 	=
-
-Successful run!
 IDENTIFIER 	= 	b
-
-Successful run!
+<Expression> -> <Term> <Expression>'
+ < Term > -> <factor> < Term>'
+<Factor> -> <ID>
 OPERATOR 	= 	+
-
-Successful run!
+<Term> -> <Epsilon>
+<Expression> -> <Expression> + <Term>
 IDENTIFIER 	= 	c
-
-Successful run!
+ < Term > -> <factor> < Term>'
+<Factor> -> <ID>
+OPERATOR 	= 	+
+<Term> -> <Epsilon>
+<Expression> -> <Expression> + <Term>
+IDENTIFIER 	= 	d
+ < Term > -> <factor> < Term>'
+<Factor> -> <ID>
 $ 	= 	$
-
-Successful run!
+<Term> -> <Epsilon>
+<Expression>' -> <Term>

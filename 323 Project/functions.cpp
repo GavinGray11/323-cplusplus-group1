@@ -264,29 +264,40 @@ bool findInteger(char integer) {
     }
 }
 
-bool Parser(vector<TokenStruct> v) {
-
-
+bool Parser(vector<TokenStruct> vec) {
+    vector<TokenStruct> v;
+    v = vec;
+    TokenStruct dollarSign;
+    dollarSign.token = "$";
+    dollarSign.tokenName = "$"; //compare this
+    dollarSign.tokenType = 1;
+    v.push_back(dollarSign);
     stack <string> order;
     cout << endl;
     order.push("$");
     order.push("S");
     int i = 0;
+
+    ofstream out("outputLex.txt");
+    out << v[i].tokenName << " \t" << "=" << " \t"
+        << v[i].token << endl;
+
     while (true) {
-        //cout << v[i].token << endl;
         if (v[i].tokenName == order.top()) {
             return true;
         }
         else if (order.top() == v[i].token) {
             i++;
             order.pop();
+            out << v[i].tokenName << " \t" << "=" << " \t"
+                << v[i].token << endl;
         }
         else if (order.top() == ")") {
-            cout << "Error: missing end parenthesis" << endl;
+            out << "Error: missing end parenthesis" << endl;
             return false;
         }
         else if (order.top() == "$") {
-            cout << "Error: missing first parenthesis" << endl;
+            out << "Error: missing first parenthesis" << endl;
             return false;
         }
 
@@ -294,20 +305,20 @@ bool Parser(vector<TokenStruct> v) {
             if (v[i].tokenType == 1) {
                 order.pop();
                 order.push("D");
-                cout << "<Statement> -> <Declerative>\n";
+                out << "<Statement> -> <Declerative>\n";
             }
             else if (v[i].tokenType == 2) {
                 order.pop();
                 if (v[i + 1].token == "=") {
                     order.push("A");
-                    cout << "<Statement> -> <Assign>\n";
+                    out << "<Statement> -> <Assign>\n";
                     //v[i].rules.push_back("<Statement> -> <Assign>");
                 }
 
                 else
                 {
                     order.push("E");
-                    cout << "<Statement> -> <Expression>\n";
+                    out << "<Statement> -> <Expression>\n";
                 }
 
             }
@@ -320,8 +331,10 @@ bool Parser(vector<TokenStruct> v) {
                 order.pop();
                 order.push("E");
                 order.push("=");
+                out << "<Assign> -> <ID> = <Expression>\n";
                 i++;
-                cout << "<Assign> -> <ID> = <Expression>\n";
+                out << v[i].tokenName << " \t" << "=" << " \t"
+                    << v[i].token << endl;
                 //v[i].rules.push_back("<Assign> -> <ID> = <Expression>");
             }
             else {
@@ -334,7 +347,7 @@ bool Parser(vector<TokenStruct> v) {
                     order.pop();
                     //order.push(v[i + 1]);
                     //order.push(v[i]);
-                    cout << "<Declarative> -> <Type> <ID>\n";
+                    out << "<Declarative> -> <Type> <ID>\n";
                 }
                 else {
                     return false;
@@ -348,7 +361,7 @@ bool Parser(vector<TokenStruct> v) {
                 order.pop();
                 order.push("E'");
                 order.push("T");
-                cout << "<Expression> -> <Term> <Expression>'\n";
+                out << "<Expression> -> <Term> <Expression>'\n";
             }
             else {
                 cout << "error";
@@ -360,7 +373,7 @@ bool Parser(vector<TokenStruct> v) {
                 order.pop();
                 order.push("T'");
                 order.push("F");
-                cout << " < Term > -> <factor> < Term>'\n";
+                out << " < Term > -> <factor> < Term>'\n";
             }
             else {
                 cout << "Error: expecting identifier or expression" << endl;
@@ -373,21 +386,21 @@ bool Parser(vector<TokenStruct> v) {
                 order.push("E'");
                 order.push("T");
                 order.push("+");
-                cout << "<Expression> -> <Expression> + <Term>" << endl;
+                out << "<Expression> -> <Expression> + <Term>" << endl;
             }
             else if (v[i].token == "-") {
                 order.pop();
                 order.push("E'");
                 order.push("T");
                 order.push("-");
-                cout << "<Expression> -> <Expression> - <Term>" << endl;
+                out << "<Expression> -> <Expression> - <Term>" << endl;
             }
             else if (v[i].tokenName == "$" || v[i].token == ")") {
                 order.pop();
-                cout << "<Expression>' -> <Term>" << endl;
+                out << "<Expression>' -> <Term>" << endl;
             }
             else {
-                cout << "Error: no operator after ID";
+                out << "Error: no operator after ID";
                 return false;
             }
 
@@ -396,22 +409,24 @@ bool Parser(vector<TokenStruct> v) {
             if (v[i].tokenType == 2) {
                 order.pop();
                 i++;
-                cout << "<Factor> -> <ID>" << endl;
+                out << "<Factor> -> <ID>" << endl;
+                out << v[i].tokenName << " \t" << "=" << " \t"
+                    << v[i].token << endl;
             }
             else if (v[i].tokenType == 5 || v[i].tokenType == 6) {
                 order.pop();
                 i++;
-                cout << "<Factor> -> <Num>" << endl;
+                out << "<Factor> -> <Num>" << endl;
             }
             else if (v[i].token == "(") {
                 order.pop();
                 order.push(")");
                 order.push("E");
                 order.push("(");
-                cout << "<Factor> -> ( <Expression> )" << endl;
+                out << "<Factor> -> ( <Expression> )" << endl;
             }
             else {
-                cout << "Error: no indentifier or expression following operator" << endl;
+                out << "Error: no indentifier or expression following operator" << endl;
                 return false;
             }
         }
@@ -421,21 +436,21 @@ bool Parser(vector<TokenStruct> v) {
                 order.push("T'");
                 order.push("F");
                 order.push("*");
-                cout << "<Term> -> <Term> * <Factor>" << endl;
+                out << "<Term> -> <Term> * <Factor>" << endl;
             }
             else if (v[i].token == "/") {
                 order.pop();
                 order.push("T'");
                 order.push("F");
                 order.push("/");
-                cout << "<Term> -> <Term> / <Factor>" << endl;
+                out << "<Term> -> <Term> / <Factor>" << endl;
             }
             else if (v[i].token == "+" || v[i].token == "-" || v[i].token == ")" || v[i].token == "$") {
                 order.pop();
-                cout << "<Term> -> <Epsilon>" << endl;
+                out << "<Term> -> <Epsilon>" << endl;
             }
             else {
-                cout << "Error: expecting operator or end of expression" << endl;
+                out << "Error: expecting operator or end of expression" << endl;
                 return false;
             }
         }
