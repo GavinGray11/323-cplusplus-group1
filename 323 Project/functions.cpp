@@ -302,7 +302,11 @@ bool Parser(vector<TokenStruct> v) {
             order.pop();
         }
         else if (order.top() == ")") {
-            cout << "Error: end parenthesis not found" << endl;
+            cout << "Error: missing end parenthesis" << endl;
+            return false;
+        }
+        else if (order.top() == "$") {
+            cout << "Error: missing first parenthesis" << endl;
             return false;
         }
         else if (order.top() == "E") {
