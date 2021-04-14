@@ -79,6 +79,9 @@ vector<TokenStruct> Lexer(string file)
                     check = true;
                     toDelete.push_back(j);
                 }
+                if (tokens[j].tokenType != SEPERATOR && tokens[j].tokenType != INTEGER) {
+                    break;
+                }
             }
         }
         if (check == true) {
@@ -292,8 +295,7 @@ bool Parser(vector<TokenStruct> v) {
     order.push("E");
     int i = 0;
     while (true) {
-      //  cout << v[i].token;
-       // cout << i;
+
         if (v[i].tokenName == order.top()) {
             return true;
         }
@@ -316,7 +318,7 @@ bool Parser(vector<TokenStruct> v) {
 
         }
         else if (order.top() == "T") {
-            if (v[i].tokenType == 2 || v[i].token == "(") {
+            if (v[i].tokenType == 2 || v[i].token == "(" || v[i].tokenType == 5 || v[i].tokenType == 6) {
                 order.pop();
                 order.push("T'");
                 order.push("F");
@@ -356,6 +358,11 @@ bool Parser(vector<TokenStruct> v) {
                 order.pop();
                 i++;
                 cout << "<Factor> -> <ID>" << endl;
+            }
+            else if (v[i].tokenType == 5 || v[i].tokenType == 6){
+                order.pop();
+                i++;
+                cout << "<Factor> -> <Num>" << endl;
             }
             else if (v[i].token == "(") {
                 order.pop();
