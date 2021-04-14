@@ -16,23 +16,23 @@ using namespace std;
 int main() {
 
     vector<TokenStruct> tokens;
+    vector<TokenStruct> tokenLine;
     string fileInput;
     fstream infile;
     infile.open("Text.txt", ios::in);   
 
     if (infile.is_open()) {    
 
-        ofstream out("outputLex.txt");
-
         while (getline(infile, fileInput)) {
 
-            tokens = Lexer(fileInput);
+            tokenLine = Lexer(fileInput);
+            tokens.insert(tokens.end(), tokenLine.begin(), tokenLine.end());
  
         }
-        infile.close();
-        out.close();
     }
-  
+    for (int i = 0; i < tokens.size(); i++) {
+        cout << tokens[i].tokenName << endl;
+    }
     if (Parser(tokens)) {
         cout << endl << "Successful run!";
     }
