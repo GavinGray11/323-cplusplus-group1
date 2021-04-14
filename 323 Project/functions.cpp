@@ -301,6 +301,10 @@ bool Parser(vector<TokenStruct> v) {
             i++;
             order.pop();
         }
+        else if (order.top() == ")") {
+            cout << "Error: end parenthesis not found" << endl;
+            return false;
+        }
         else if (order.top() == "E") {
             order.pop();
             order.push("E'");
@@ -357,7 +361,7 @@ bool Parser(vector<TokenStruct> v) {
                 cout << "<Factor> -> ( <Expression> )" << endl;
             }
             else {
-                cout << "Error: no character or expression following operator" << endl;
+                cout << "Error: no indentifier or expression following operator" << endl;
                 return false;
             }
         }
