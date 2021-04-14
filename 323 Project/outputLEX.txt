@@ -1,9 +1,18 @@
-REAL 	= 	10.0
-OPERATOR 	= 	+
 IDENTIFIER 	= 	a
-OPERATOR 	= 	*
-SEPERATOR 	= 	(
-INTEGER 	= 	6
-OPERATOR 	= 	/
+
+Successful run!
+OPERATOR 	= 	=
+
+Successful run!
 IDENTIFIER 	= 	b
-SEPERATOR 	= 	)
+
+Successful run!
+OPERATOR 	= 	+
+
+Successful run!
+IDENTIFIER 	= 	c
+
+Successful run!
+$ 	= 	$
+
+Successful run!

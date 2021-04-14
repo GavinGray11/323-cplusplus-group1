@@ -1,18 +1,18 @@
 #include "functions.hpp"
 
 
-                             /*Collumns*/
+/*Collumns*/
 /*               rows        Keyword,    identifier,  seperator,  operator,   integer,    real,      space,     unknown      IGNORE*/
 int stateTable[][10] = { {0, KEYWORD,    IDENTIFIER,  SEPERATOR,  OPERATOR,   INTEGER,    REAL,      SPACE,     UNKNOWN,     IGNORE},
 /* STATE 1 */   {KEYWORD,    KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  IDENTIFIER, KILLSTATE, KILLSTATE, IDENTIFIER,  IGNORE},
 /* STATE 2 */   {IDENTIFIER, KILLSTATE,  IDENTIFIER,  KILLSTATE,  KILLSTATE,  IDENTIFIER, KILLSTATE, KILLSTATE, IDENTIFIER,  IGNORE},
 /* STATE 3 */   {SEPERATOR,  KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  REAL,      KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 4 */   {OPERATOR,   KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
-/* STATE 5 */   {INTEGER,    KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  INTEGER,    KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
+/* STATE 5 */   {INTEGER,    KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  INTEGER,    REAL,      KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 6 */   {REAL,       KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  REAL,       KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 7 */   {SPACE,      KILLSTATE,  KILLSTATE,   KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, KILLSTATE,   IGNORE},
 /* STATE 8 */   {UNKNOWN,    KILLSTATE,  IDENTIFIER,  KILLSTATE,  KILLSTATE,  KILLSTATE,  KILLSTATE, KILLSTATE, UNKNOWN,     IGNORE},
-/* STATE 9 */   {IGNORE,     IGNORE,     IGNORE,      IGNORE,     IGNORE,     IGNORE,     IGNORE,    IGNORE,    IGNORE,      IGNORE}};
+/* STATE 9 */   {IGNORE,     IGNORE,     IGNORE,      IGNORE,     IGNORE,     IGNORE,     IGNORE,    IGNORE,    IGNORE,      IGNORE} };
 
 vector<TokenStruct> Lexer(string file)
 {
@@ -24,17 +24,17 @@ vector<TokenStruct> Lexer(string file)
     int prevState = KILLSTATE;
     string currentToken;
 
-   
+
     for (unsigned i = 0; i < file.length();)
     {
         currentChar = file[i];
         columnState = Get_FSM_Col(currentChar);
         currentState = stateTable[currentState][columnState];
 
-       // Stays at a UNKNOWN state until it hits a KILLSTATE meaning a token was found
+        // Stays at a UNKNOWN state until it hits a KILLSTATE meaning a token was found
         if (currentState == KILLSTATE) {
             if (prevState != SPACE) {
-                
+
                 tokenObjectFound.token = currentToken;
                 if (findKeywords(tokenObjectFound.token)) {
                     tokenObjectFound.tokenType = KEYWORD;
@@ -42,12 +42,12 @@ vector<TokenStruct> Lexer(string file)
                 else {
                     tokenObjectFound.tokenType = prevState;
                 }
-                
+
                 tokenObjectFound.tokenName = GetLexemeName(tokenObjectFound.tokenType);
                 tokens.push_back(tokenObjectFound);
             }
             currentToken = "";
-        } 
+        }
         else {
             currentToken += currentChar;
             i++;
@@ -68,35 +68,11 @@ vector<TokenStruct> Lexer(string file)
         tokenObjectFound.tokenName = GetLexemeName(tokenObjectFound.tokenType);
         tokens.push_back(tokenObjectFound);
     }
-
-    vector<int> toDelete;
-  for (int i = 2; i < tokens.size(); i++) {
-      bool check = false;
-        if (tokens[i].tokenType == INTEGER && i > 1) {
-            for (int j = i-1; j >= 0; j--) {
-                if (tokens[j].token == "." || tokens[j].tokenType == INTEGER) {
-                    tokens[i].token = tokens[j].token + tokens[i].token;
-                    check = true;
-                    toDelete.push_back(j);
-                }
-                if (tokens[j].tokenType != SEPERATOR && tokens[j].tokenType != INTEGER) {
-                    break;
-                }
-            }
-        }
-        if (check == true) {
-            tokens[i].tokenName = "REAL";
-            tokens[i].tokenType = REAL;
-        }
-    }
-  for (int i = 0; i < toDelete.size(); i++) {
-      tokens.erase(tokens.begin() + toDelete[i]);
-  }
-
     return tokens;
 }
+
 int Get_FSM_Col(char currentChar) {
-    
+
     if (isspace(currentChar)) {
         return SPACE;
     }
@@ -104,6 +80,9 @@ int Get_FSM_Col(char currentChar) {
         return OPERATOR;
     }
     else if (findSeperator(currentChar)) {
+        if (currentChar == '.') {
+            return REAL;
+        }
         return SEPERATOR;
     }
     else if (findIdentifier(currentChar)) {
@@ -111,7 +90,7 @@ int Get_FSM_Col(char currentChar) {
     }
     else if (findInteger(currentChar)) {
         return INTEGER;
-    } 
+    }
     else if (currentChar == '!') {
         return IGNORE;
     }
@@ -224,16 +203,16 @@ bool findSeperator(char seperator) {
 }
 
 bool findKeywords(string keyword) {
-    
-    string keywords[] = { 
-        "int", "float", "bool", "True", "False", "if", "else", 
-        "then", "endif", "endelse", "while", "whileend", "do", 
-        "enddo", "for", "endfor", "STDinput", "STDoutput", "and", 
+
+    string keywords[] = {
+        "int", "float", "bool", "True", "False", "if", "else",
+        "then", "endif", "endelse", "while", "whileend", "do",
+        "enddo", "for", "endfor", "STDinput", "STDoutput", "and",
         "or" , "not" };
     for (int i = 0; i < 19; i++)
-    if (keyword == keywords[i]) {
-        return true;
-    }
+        if (keyword == keywords[i]) {
+            return true;
+        }
     return false;
 }
 bool findIdentifier(char ident) {
@@ -288,14 +267,13 @@ bool findInteger(char integer) {
 bool Parser(vector<TokenStruct> v) {
 
 
-
     stack <string> order;
     cout << endl;
     order.push("$");
-    order.push("E");
+    order.push("S");
     int i = 0;
     while (true) {
-
+        //cout << v[i].token << endl;
         if (v[i].tokenName == order.top()) {
             return true;
         }
@@ -311,24 +289,85 @@ bool Parser(vector<TokenStruct> v) {
             cout << "Error: missing first parenthesis" << endl;
             return false;
         }
-        else if (order.top() == "E") {
-            order.pop();
-            order.push("E'");
-            order.push("T");
 
+        else if (order.top() == "S") {
+            if (v[i].tokenType == 1) {
+                order.pop();
+                order.push("D");
+                cout << "<Statement> -> <Declerative>\n";
+            }
+            else if (v[i].tokenType == 2) {
+                order.pop();
+                if (v[i + 1].token == "=") {
+                    order.push("A");
+                    cout << "<Statement> -> <Assign>\n";
+                    //v[i].rules.push_back("<Statement> -> <Assign>");
+                }
+
+                else
+                {
+                    order.push("E");
+                    cout << "<Statement> -> <Expression>\n";
+                }
+
+            }
+            else {
+                return false;
+            }
+        }
+        else if (order.top() == "A") {
+            if (v[i].tokenType == 2) {
+                order.pop();
+                order.push("E");
+                order.push("=");
+                i++;
+                cout << "<Assign> -> <ID> = <Expression>\n";
+                //v[i].rules.push_back("<Assign> -> <ID> = <Expression>");
+            }
+            else {
+                return false;
+            }
+        }
+        else if (order.top() == "D") {
+            if (v[i].tokenType == 1) {
+                if (v[i + 1].tokenType == 2) {
+                    order.pop();
+                    //order.push(v[i + 1]);
+                    //order.push(v[i]);
+                    cout << "<Declarative> -> <Type> <ID>\n";
+                }
+                else {
+                    return false;
+                }
+            }
+
+        }
+
+        else if (order.top() == "E") {
+            if (v[i].tokenType == 2 || v[i].token == "(" || v[i].tokenType == 5 || v[i].tokenType == 6) {
+                order.pop();
+                order.push("E'");
+                order.push("T");
+                cout << "<Expression> -> <Term> <Expression>'\n";
+            }
+            else {
+                cout << "error";
+                return false;
+            }
         }
         else if (order.top() == "T") {
             if (v[i].tokenType == 2 || v[i].token == "(" || v[i].tokenType == 5 || v[i].tokenType == 6) {
                 order.pop();
                 order.push("T'");
                 order.push("F");
+                cout << " < Term > -> <factor> < Term>'\n";
             }
             else {
                 cout << "Error: expecting identifier or expression" << endl;
                 return false;
             }
         }
-        else if (order.top() == "E'"){
+        else if (order.top() == "E'") {
             if (v[i].token == "+") {
                 order.pop();
                 order.push("E'");
@@ -345,7 +384,7 @@ bool Parser(vector<TokenStruct> v) {
             }
             else if (v[i].tokenName == "$" || v[i].token == ")") {
                 order.pop();
-                cout << "<Expression> -> <Term>" << endl;
+                cout << "<Expression>' -> <Term>" << endl;
             }
             else {
                 cout << "Error: no operator after ID";
@@ -359,7 +398,7 @@ bool Parser(vector<TokenStruct> v) {
                 i++;
                 cout << "<Factor> -> <ID>" << endl;
             }
-            else if (v[i].tokenType == 5 || v[i].tokenType == 6){
+            else if (v[i].tokenType == 5 || v[i].tokenType == 6) {
                 order.pop();
                 i++;
                 cout << "<Factor> -> <Num>" << endl;
@@ -393,7 +432,7 @@ bool Parser(vector<TokenStruct> v) {
             }
             else if (v[i].token == "+" || v[i].token == "-" || v[i].token == ")" || v[i].token == "$") {
                 order.pop();
-                cout << "<Term> -> <Factor>" << endl;
+                cout << "<Term> -> <Epsilon>" << endl;
             }
             else {
                 cout << "Error: expecting operator or end of expression" << endl;
@@ -401,6 +440,4 @@ bool Parser(vector<TokenStruct> v) {
             }
         }
     }
-    
 }
-

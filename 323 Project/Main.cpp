@@ -24,28 +24,40 @@ int main() {
 
         ofstream out("outputLex.txt");
 
-        while (getline(infile, fileInput)) {                      
-            
+        while (getline(infile, fileInput)) {
+
             tokens = Lexer(fileInput);
+            TokenStruct dollarSign;
+            dollarSign.token = "$";
+            dollarSign.tokenName = "$"; //compare this
+            dollarSign.tokenType = 1;
+            tokens.push_back(dollarSign);
 
             for (unsigned i = 0; i < tokens.size(); i++)
             {
-               out << tokens[i].tokenName << " \t" << "=" << " \t"
-                   << tokens[i].token << endl;  
+                out << tokens[i].tokenName << " \t" << "=" << " \t"
+                    << tokens[i].token << endl;
+                if (Parser(tokens)) {
+                    out << endl << "Successful run!" << endl;;
+                }
+                else if (Parser(tokens) == false) {
+                    out << endl << "Failed. See Errors" << endl;
+                }
             }
         }
-        infile.close();  
+        infile.close();
         out.close();
     }
-    TokenStruct dollarSign;
+    /*TokenStruct dollarSign;
     dollarSign.token = "$";
     dollarSign.tokenName = "$"; //compare this
     dollarSign.tokenType = 1;
     tokens.push_back(dollarSign);
     if (Parser(tokens)) {
         cout << endl << "Successful run!";
-    } else if (Parser(tokens) == false) {
-        cout << endl << "Failed. See Errors";
     }
+    else if (Parser(tokens) == false) {
+        cout << endl << "Failed. See Errors";
+    }*/
     return 0;
 }
