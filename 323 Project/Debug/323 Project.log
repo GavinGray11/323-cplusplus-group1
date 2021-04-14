@@ -1,7 +1,5 @@
-﻿  Main.cpp
-  functions.cpp
+﻿  functions.cpp
 C:\Users\Jacob\Desktop\323Proj\323 Project\functions.cpp(73,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Jacob\Desktop\323Proj\323 Project\functions.cpp(89,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Jacob\Desktop\323Proj\323 Project\functions.cpp(239,23): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
   323 Project.vcxproj -> C:\Users\Jacob\Desktop\323Proj\323 Project\Debug\323 Project.exe

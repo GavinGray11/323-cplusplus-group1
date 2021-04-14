@@ -283,21 +283,23 @@ bool findInteger(char integer) {
 }
 
 bool Parser(vector<TokenStruct> v) {
-    TokenStruct dollarSign;
-   // dollarSign.token = "$";
-  //  dollarSign.tokenName = "$"; //compare this
-  //  dollarSign.tokenType = 1;
+
 
 
     stack <string> order;
     cout << endl;
-   // v.push_back(dollarSign);
     order.push("$");
     order.push("E");
     int i = 0;
     while (true) {
+      //  cout << v[i].token;
+       // cout << i;
         if (v[i].tokenName == order.top()) {
             return true;
+        }
+        else if (order.top() == v[i].token) {
+            i++;
+            order.pop();
         }
         else if (order.top() == "E") {
             order.pop();
@@ -306,28 +308,82 @@ bool Parser(vector<TokenStruct> v) {
 
         }
         else if (order.top() == "T") {
-            if (v[i].tokenType == 2 || v[i].tokenType == 5 || v[i].tokenType == 6) {
+            if (v[i].tokenType == 2 || v[i].token == "(") {
                 order.pop();
-                i++;
+                order.push("T'");
+                order.push("F");
             }
             else {
+                cout << "Error: expecting identifier or expression" << endl;
                 return false;
             }
         }
         else if (order.top() == "E'"){
-            if (v[i].tokenType == 4) {
-                i++;
+            if (v[i].token == "+") {
+                order.pop();
                 order.push("E'");
                 order.push("T");
+                order.push("+");
+                cout << "<Expression> -> <Expression> + <Term>" << endl;
             }
-            else if (v[i].tokenName == "$") {
+            else if (v[i].token == "-") {
                 order.pop();
+                order.push("E'");
+                order.push("T");
+                order.push("-");
+                cout << "<Expression> -> <Expression> - <Term>" << endl;
+            }
+            else if (v[i].tokenName == "$" || v[i].token == ")") {
+                order.pop();
+                cout << "<Expression> -> <Term>" << endl;
             }
             else {
-                cout << "no operator after ID";
+                cout << "Error: no operator after ID";
                 return false;
             }
 
+        }
+        else if (order.top() == "F") {
+            if (v[i].tokenType == 2) {
+                order.pop();
+                i++;
+                cout << "<Factor> -> <ID>" << endl;
+            }
+            else if (v[i].token == "(") {
+                order.pop();
+                order.push(")");
+                order.push("E");
+                order.push("(");
+                cout << "<Factor> -> ( <Expression> )" << endl;
+            }
+            else {
+                cout << "Error: no character or expression following operator" << endl;
+                return false;
+            }
+        }
+        else if (order.top() == "T'") {
+            if (v[i].token == "*") {
+                order.pop();
+                order.push("T'");
+                order.push("F");
+                order.push("*");
+                cout << "<Term> -> <Term> * <Factor>" << endl;
+            }
+            else if (v[i].token == "/") {
+                order.pop();
+                order.push("T'");
+                order.push("F");
+                order.push("/");
+                cout << "<Term> -> <Term> / <Factor>" << endl;
+            }
+            else if (v[i].token == "+" || v[i].token == "-" || v[i].token == ")" || v[i].token == "$") {
+                order.pop();
+                cout << "<Term> -> <Factor>" << endl;
+            }
+            else {
+                cout << "Error: expecting operator or end of expression" << endl;
+                return false;
+            }
         }
     }
     
