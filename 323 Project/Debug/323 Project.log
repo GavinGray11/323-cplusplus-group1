@@ -1,3 +1,4 @@
 ﻿  functions.cpp
 C:\Users\Jacob\Desktop\syn_analyzer_final\323 Project\functions.cpp(221,23): warning C4018: '<': signed/unsigned mismatch
-  323 Project.vcxproj -> C:\Users\Jacob\Desktop\syn_analyzer_final\323 Project\Debug\323 Project.exe
+C:\Users\Jacob\Desktop\syn_analyzer_final\323 Project\functions.cpp(486,1): error C2059: syntax error: '}'
+C:\Users\Jacob\Desktop\syn_analyzer_final\323 Project\functions.cpp(486,1): error C2143: syntax error: missing ';' before '}'
