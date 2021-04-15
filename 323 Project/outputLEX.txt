@@ -3,11 +3,13 @@ IDENTIFIER 	= 	c
 <Expression> -> <Term> <Expression>'
  < Term > -> <factor> < Term>'
 <Factor> -> <ID>
-OPERATOR 	= 	+
-<Term> -> <Epsilon>
-<Expression> -> <Expression> + <Term>
+OPERATOR 	= 	*
+<Term> -> <Term> * <Factor>
 IDENTIFIER 	= 	b
- < Term > -> <factor> < Term>'
+<Factor> -> <ID>
+OPERATOR 	= 	/
+<Term> -> <Term> / <Factor>
+IDENTIFIER 	= 	c
 <Factor> -> <ID>
 $ 	= 	$
 <Term> -> <Epsilon>
