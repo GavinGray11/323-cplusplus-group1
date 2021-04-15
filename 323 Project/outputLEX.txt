@@ -1,8 +1,5 @@
-IDENTIFIER 	= 	x
-<Statement> -> <Assign>
-<Assign> -> <ID> = <Expression>
-OPERATOR 	= 	=
-IDENTIFIER 	= 	a
+IDENTIFIER 	= 	c
+<Statement> -> <Expression>
 <Expression> -> <Term> <Expression>'
  < Term > -> <factor> < Term>'
 <Factor> -> <ID>
@@ -12,5 +9,6 @@ OPERATOR 	= 	+
 IDENTIFIER 	= 	b
  < Term > -> <factor> < Term>'
 <Factor> -> <ID>
-IDENTIFIER 	= 	a
-Error: expecting operator or end of expression
+$ 	= 	$
+<Term> -> <Epsilon>
+<Expression>' -> <Term>

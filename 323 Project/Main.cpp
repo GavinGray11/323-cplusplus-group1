@@ -26,18 +26,24 @@ int main() {
         while (getline(infile, fileInput)) {
 
             tokenLine = Lexer(fileInput);
-            tokens.insert(tokens.end(), tokenLine.begin(), tokenLine.end());
+            if (Parser(tokenLine)) {
+                cout << endl << "Successful run!";
+            }
+            else if (Parser(tokenLine) == false) {
+                cout << endl << "Failed. See Errors";
+            }
+            //tokens.insert(tokens.end(), tokenLine.begin(), tokenLine.end());
  
         }
     }
     for (int i = 0; i < tokens.size(); i++) {
         cout << tokens[i].tokenName << endl;
     }
-    if (Parser(tokens)) {
+  /*  if (Parser(tokens)) {
         cout << endl << "Successful run!";
     }
     else if (Parser(tokens) == false) {
         cout << endl << "Failed. See Errors";
-    }
+    } */
     return 0;
 }
