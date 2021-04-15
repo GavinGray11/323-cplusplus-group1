@@ -1,3 +1,28 @@
+IDENTIFIER 	= 	a
+<Statement> -> <Expression>
+<Expression> -> <Term> <Expression>'
+ < Term > -> <factor> < Term>'
+<Factor> -> <ID>
+OPERATOR 	= 	+
+<Term> -> <Epsilon>
+<Expression> -> <Expression> + <Term>
+IDENTIFIER 	= 	b
+ < Term > -> <factor> < Term>'
+<Factor> -> <ID>
+OPERATOR 	= 	/
+<Term> -> <Term> / <Factor>
+SEPERATOR 	= 	(
+<Factor> -> ( <Expression> )
+IDENTIFIER 	= 	b
+<Expression> -> <Term> <Expression>'
+ < Term > -> <factor> < Term>'
+<Factor> -> <ID>
+SEPERATOR 	= 	)
+<Term> -> <Epsilon>
+<Expression>' -> <Term>
+$ 	= 	$
+<Term> -> <Epsilon>
+<Expression>' -> <Term>
 IDENTIFIER 	= 	c
 <Statement> -> <Expression>
 <Expression> -> <Term> <Expression>'

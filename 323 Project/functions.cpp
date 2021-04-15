@@ -278,7 +278,8 @@ bool Parser(vector<TokenStruct> vec) {
     order.push("S");
     int i = 0;
 
-    ofstream out("outputLex.txt");
+    fstream out("outputLex.txt", ios::app);
+
     out << v[i].tokenName << " \t" << "=" << " \t"
         << v[i].token << endl;
 
