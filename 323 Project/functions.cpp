@@ -301,55 +301,56 @@ bool Parser(vector<TokenStruct> vec) {
             out << "Error: missing first parenthesis" << endl;
             return false;
         }
-
         else if (order.top() == "S") {
             if (v[i].tokenType == KEYWORD) {
                 order.pop();
                 order.push("D");
-                out << "<Statement> -> <Declerative>\n";
+                out << "    <Statement> -> <Declerative>\n";
             }
             else if (v[i].tokenType == IDENTIFIER) {
                 order.pop();
                 if (v[i + 1].token == "=") {
                     order.push("A");
-                    out << "<Statement> -> <Assign>\n";
-                    //v[i].rules.push_back("<Statement> -> <Assign>");
+                    out << "    <Statement> -> <Assign>\n";
                 }
-                else
-                {
+                else {
+                    order.pop();
                     order.push("E");
                 }
-
+            }
+            else if (v[i].token == "(") {
+                order.pop();
+                order.push("E");
             }
             else {
-                out << "";
+                out << "Error: incorrect character start" << endl;
                 return false;
             }
+
         }
         else if (order.top() == "A") {
-            if (v[i].tokenType == 2) {
+            if (v[i].tokenType == IDENTIFIER) {
                 order.pop();
                 order.push("E");
                 order.push("=");
-                out << "<Assign> -> <ID> = <Expression>\n";
+                out << "    <Assign> -> <ID> = <Expression>\n";
                 i++;
                 out << v[i].tokenName << " \t" << "=" << " \t"
                     << v[i].token << endl;
-                //v[i].rules.push_back("<Assign> -> <ID> = <Expression>");
             }
             else {
                 return false;
             }
         }
         else if (order.top() == "D") {
-            if (v[i].tokenType == 1) {
-                if (v[i + 1].tokenType == 2) {
+            if (v[i].tokenType == KEYWORD) {
+                if (v[i + 1].tokenType == IDENTIFIER) {
                     order.pop();
-                    //order.push(v[i + 1]);
-                    //order.push(v[i]);
-                    out << "<Declarative> -> <Type> <ID>\n";
+                    out << "    <Declarative> -> <Type> <ID>\n";
+                    i = i + 2;
                 }
                 else {
+                    out << "Error: expecting ID after type" << endl;
                     return false;
                 }
             }
@@ -357,23 +358,24 @@ bool Parser(vector<TokenStruct> vec) {
         }
 
         else if (order.top() == "E") {
-            if (v[i].tokenType == 2 || v[i].token == "(" || v[i].tokenType == 5 || v[i].tokenType == 6) {
+            if (v[i].tokenType == IDENTIFIER || v[i].token == "(" || v[i].tokenType == INTEGER || v[i].tokenType == REAL) {
                 order.pop();
                 order.push("E'");
                 order.push("T");
-                out << "<Expression> -> <Term> <Expression>'\n";
+                out << "    <Expression> -> <Term> <Expression>\n";
             }
             else {
-                cout << "error";
+                cout << "Error: not acceptable first character" << endl;
                 return false;
             }
         }
         else if (order.top() == "T") {
             if (v[i].tokenType == 2 || v[i].token == "(" || v[i].tokenType == 5 || v[i].tokenType == 6) {
+
                 order.pop();
                 order.push("T'");
                 order.push("F");
-                out << " < Term > -> <factor> < Term>'\n";
+                out << "    <Term> -> <factor> < Term>" << endl;
             }
             else {
                 cout << "Error: expecting identifier or expression" << endl;
@@ -386,44 +388,48 @@ bool Parser(vector<TokenStruct> vec) {
                 order.push("E'");
                 order.push("T");
                 order.push("+");
-                out << "<Expression> -> <Expression> + <Term>" << endl;
+                out << "    <Expression> -> <Expression> + <Term>" << endl;
             }
             else if (v[i].token == "-") {
                 order.pop();
                 order.push("E'");
                 order.push("T");
                 order.push("-");
-                out << "<Expression> -> <Expression> - <Term>" << endl;
+                out << "    <Expression> -> <Expression> - <Term>" << endl;
             }
             else if (v[i].tokenName == "$" || v[i].token == ")") {
                 order.pop();
-                out << "<Expression>' -> <Term>" << endl;
+                out << "    <Expression> -> <Term>" << endl;
             }
             else {
-                out << "Error: no operator after ID";
+                out << "Error: no operator after ID" << endl;
                 return false;
             }
 
         }
         else if (order.top() == "F") {
-            if (v[i].tokenType == 2) {
+        if ((v[i].tokenType == 5 || v[i].tokenType == 6 || v[i].tokenType == 2) && (v[i].token == "=") && (i != 0)) {
+                out << "Error: Assignment must be to one identifier" << endl;
+                return false;
+            }
+            else if (v[i].tokenType == 2) {
                 order.pop();
                 i++;
-                out << "<Factor> -> <ID>" << endl;
+                out << "    <Factor> -> <ID>" << endl;
                 out << v[i].tokenName << " \t" << "=" << " \t"
                     << v[i].token << endl;
             }
             else if (v[i].tokenType == 5 || v[i].tokenType == 6) {
                 order.pop();
                 i++;
-                out << "<Factor> -> <Num>" << endl;
+                out << "    <Factor> -> <Num>" << endl;
             }
             else if (v[i].token == "(") {
                 order.pop();
                 order.push(")");
                 order.push("E");
                 order.push("(");
-                out << "<Factor> -> ( <Expression> )" << endl;
+                out << "    <Factor> -> ( <Expression> )" << endl;
             }
             else {
                 out << "Error: no indentifier or expression following operator" << endl;
@@ -436,21 +442,21 @@ bool Parser(vector<TokenStruct> vec) {
                 order.push("T'");
                 order.push("F");
                 order.push("*");
-                out << "<Term> -> <Term> * <Factor>" << endl;
+                out << "    <Term> -> <Term> * <Factor>" << endl;
             }
             else if (v[i].token == "/") {
                 order.pop();
                 order.push("T'");
                 order.push("F");
                 order.push("/");
-                out << "<Term> -> <Term> / <Factor>" << endl;
+                out << "    <Term> -> <Term> / <Factor>" << endl;
             }
             else if (v[i].token == "+" || v[i].token == "-" || v[i].token == ")" || v[i].token == "$") {
                 order.pop();
-                out << "<Term> -> <Epsilon>" << endl;
+                out << "    <Term> -> <Epsilon>" << endl;
             }
             else {
-                out << "Error: expecting operator or end of expression" << endl;
+                out << "Error: expecting valid operator or end of expression" << endl;
                 return false;
             }
         }

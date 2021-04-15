@@ -1,2 +1,4 @@
-a = b + C
-(a) +b = b + c / d * h
+x=a + b
+z=c+ d
+a=e-f
+b=(g*n)

@@ -1,0 +1,73 @@
+IDENTIFIER 	= 	x
+    <Statement> -> <Assign>
+    <Assign> -> <ID> = <Expression>
+OPERATOR 	= 	=
+IDENTIFIER 	= 	a
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	+
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> + <Term>
+IDENTIFIER 	= 	b
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+$ 	= 	$
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+IDENTIFIER 	= 	z
+    <Statement> -> <Assign>
+    <Assign> -> <ID> = <Expression>
+OPERATOR 	= 	=
+IDENTIFIER 	= 	c
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	+
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> + <Term>
+IDENTIFIER 	= 	d
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+$ 	= 	$
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+IDENTIFIER 	= 	a
+    <Statement> -> <Assign>
+    <Assign> -> <ID> = <Expression>
+OPERATOR 	= 	=
+IDENTIFIER 	= 	e
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	-
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> - <Term>
+IDENTIFIER 	= 	f
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+$ 	= 	$
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+IDENTIFIER 	= 	b
+    <Statement> -> <Assign>
+    <Assign> -> <ID> = <Expression>
+OPERATOR 	= 	=
+SEPERATOR 	= 	(
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> ( <Expression> )
+IDENTIFIER 	= 	g
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	*
+    <Term> -> <Term> * <Factor>
+IDENTIFIER 	= 	n
+    <Factor> -> <ID>
+SEPERATOR 	= 	)
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+$ 	= 	$
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
