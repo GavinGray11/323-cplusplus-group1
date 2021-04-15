@@ -303,27 +303,26 @@ bool Parser(vector<TokenStruct> vec) {
         }
 
         else if (order.top() == "S") {
-            if (v[i].tokenType == 1) {
+            if (v[i].tokenType == KEYWORD) {
                 order.pop();
                 order.push("D");
                 out << "<Statement> -> <Declerative>\n";
             }
-            else if (v[i].tokenType == 2) {
+            else if (v[i].tokenType == IDENTIFIER) {
                 order.pop();
                 if (v[i + 1].token == "=") {
                     order.push("A");
                     out << "<Statement> -> <Assign>\n";
                     //v[i].rules.push_back("<Statement> -> <Assign>");
                 }
-
                 else
                 {
                     order.push("E");
-                    out << "<Statement> -> <Expression>\n";
                 }
 
             }
             else {
+                out << "";
                 return false;
             }
         }
