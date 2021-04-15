@@ -1,23 +1,16 @@
-IDENTIFIER 	= 	a
+IDENTIFIER 	= 	x
 <Statement> -> <Assign>
 <Assign> -> <ID> = <Expression>
 OPERATOR 	= 	=
-IDENTIFIER 	= 	b
+IDENTIFIER 	= 	a
 <Expression> -> <Term> <Expression>'
  < Term > -> <factor> < Term>'
 <Factor> -> <ID>
 OPERATOR 	= 	+
 <Term> -> <Epsilon>
 <Expression> -> <Expression> + <Term>
-IDENTIFIER 	= 	c
+IDENTIFIER 	= 	b
  < Term > -> <factor> < Term>'
 <Factor> -> <ID>
-OPERATOR 	= 	+
-<Term> -> <Epsilon>
-<Expression> -> <Expression> + <Term>
-IDENTIFIER 	= 	d
- < Term > -> <factor> < Term>'
-<Factor> -> <ID>
-$ 	= 	$
-<Term> -> <Epsilon>
-<Expression>' -> <Term>
+IDENTIFIER 	= 	a
+Error: expecting operator or end of expression
