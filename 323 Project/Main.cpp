@@ -20,28 +20,40 @@ int main() {
     string fileInput;
     fstream infile;
     infile.open("Text.txt", ios::in);   
-    ofstream out("outputLex.txt");
-   // out << "";
+    ofstream out2("outputLex.txt");
+    out2 << "";
+    out2.close();
+    ofstream out("outputLex.txt", ios::app);
+
     if (infile.is_open()) {    
+
+        bool checker = false;
 
         while (getline(infile, fileInput)) {
 
             tokenLine = Lexer(fileInput);
             bool check = Parser(tokenLine);
+
             if (check) {
-                cout << endl << "Successful run!";
+                checker = true;
             }
             else {
-                cout << endl << "Failed. See Errors";
-                break;
+                checker = false;
             }
-            //tokens.insert(tokens.end(), tokenLine.begin(), tokenLine.end());
- 
         }
+
+        if (checker) {
+
+            out << "Successful run!" << endl;
+        }
+        else {
+
+            out <<  "Failed. See Errors" << endl;
+            
+        }
+
+        infile.close();
     }
- //   for (int i = 0; i < tokenLine.size(); i++) {
-  //      cout << tokenLine[i].tokenName << endl;
-   // }
 
     return 0;
 }

@@ -1,4 +1,3 @@
-T
 IDENTIFIER 	= 	a
     <Expression> -> <Term> <Expression>
     <Term> -> <factor> < Term>
@@ -6,9 +5,93 @@ IDENTIFIER 	= 	a
 OPERATOR 	= 	+
     <Term> -> <Epsilon>
     <Expression> -> <Expression> + <Term>
+
 IDENTIFIER 	= 	b
     <Term> -> <factor> < Term>
     <Factor> -> <ID>
 $ 	= 	$
     <Term> -> <Epsilon>
     <Expression> -> <Term>
+KEYWORD 	= 	bool
+    <Statement> -> <Declerative>
+    <Declarative> -> <Type> <ID>
+IDENTIFIER 	= 	f
+    <Statement> -> <Assign>
+    <Assign> -> <ID> = <Expression>
+OPERATOR 	= 	=
+
+SEPERATOR 	= 	(
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> ( <Expression> )
+
+IDENTIFIER 	= 	a
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	+
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> + <Term>
+
+IDENTIFIER 	= 	b
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+SEPERATOR 	= 	)
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+
+OPERATOR 	= 	+
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> + <Term>
+
+SEPERATOR 	= 	(
+    <Term> -> <factor> < Term>
+    <Factor> -> ( <Expression> )
+
+IDENTIFIER 	= 	c
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	-
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> - <Term>
+
+IDENTIFIER 	= 	d
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+SEPERATOR 	= 	)
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+
+$ 	= 	$
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+SEPERATOR 	= 	(
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> ( <Expression> )
+
+IDENTIFIER 	= 	a
+    <Expression> -> <Term> <Expression>
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+OPERATOR 	= 	/
+    <Term> -> <Term> / <Factor>
+
+IDENTIFIER 	= 	b
+    <Factor> -> <ID>
+OPERATOR 	= 	+
+    <Term> -> <Epsilon>
+    <Expression> -> <Expression> + <Term>
+
+IDENTIFIER 	= 	c
+    <Term> -> <factor> < Term>
+    <Factor> -> <ID>
+SEPERATOR 	= 	)
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+
+$ 	= 	$
+    <Term> -> <Epsilon>
+    <Expression> -> <Term>
+Successful run!

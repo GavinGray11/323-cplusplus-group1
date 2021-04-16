@@ -264,28 +264,9 @@ bool findInteger(char integer) {
     }
 }
 
-int type(TokenStruct toke) {
-    if (toke.tokenType == IDENTIFIER) {
 
-    }
-    else if (toke.token == "+") {
-
-    }
-    else if (toke.token == "-") {
-
-    }
-}
 
 bool Parser(vector<TokenStruct> vec) {
-    
-    string synTable[][9] = {    
-      { "S",   "id",    "+",    "-",    "*",    "/",    "(",    ")",    "$" }, 
-
-      { "E",   "TE'",   "0",    "0",    "0",    "0",    "0",    "0",    "0" },
-      { "E'",  "0",     "+TE'", "+TE'", "0",    "0",    "0",    "e",    "e" },
-      { "T",   "FT'",   "0",    "0",    "0",    "0",    "FT'",  "0",    "0" },
-      { "T'",  "0",     "e",    "e",    "*FT'", "/FT'", "0",    "e",    "e" },
-      { "F",   "id",    "0",    "0",    "0",    "0",    "(E)",  "0",    "0" } };
     
     
     vector<TokenStruct> v;
@@ -302,7 +283,6 @@ bool Parser(vector<TokenStruct> vec) {
     int i = 0;
 
     fstream out("outputLex.txt", ios::app);
-    out << synTable[0][1][0] << endl;
     out << v[i].tokenName << " \t" << "=" << " \t"
         << v[i].token << endl;
 
@@ -313,6 +293,7 @@ bool Parser(vector<TokenStruct> vec) {
         else if (order.top() == v[i].token) {
             i++;
             order.pop();
+            out << endl;
             out << v[i].tokenName << " \t" << "=" << " \t"
                 << v[i].token << endl;
         }

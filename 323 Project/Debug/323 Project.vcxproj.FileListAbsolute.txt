@@ -7,3 +7,5 @@ C:\Users\Jacob\source\repos\323-cplusplus-group1\323 Project\Debug\323 Project.e
 C:\Users\Jacob\Desktop\syn_analyzer_final\323 Project\Debug\323 Project.exe
 C:\Users\Jacob\Desktop\githubSyn\323 Project\Debug\323 Project.exe
 C:\Users\Jacob\Desktop\githubSyn\323 Project\Debug\323 Project.pdb
+C:\Users\Gavin\323-cplusplus-group1\323 Project\Debug\323 Project.exe
+C:\Users\Gavin\323-cplusplus-group1\323 Project\Debug\323 Project.pdb
