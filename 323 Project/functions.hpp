@@ -13,6 +13,12 @@ struct TokenStruct {
     string tokenName;
 };
 
+struct Symbol {
+    string identifier;
+    int memoryLoc;
+    string type;
+};
+
 enum FSM
 {
     KILLSTATE   = 0,
@@ -40,8 +46,12 @@ bool findInteger(char integer);
 
 
 //determines if syntax is correct
-bool Parser(vector<TokenStruct> v);
+bool Parser(vector<TokenStruct> vec, vector<Symbol>& v2);
 
+//checks table for existing symbol, -1 if exists or index if it does not exist
+int checkTable(vector<Symbol> &v2, string id);
+//scans for memory location and adds a symbol at the first available memory location
+void addSymbol(vector<Symbol>& v2, string id, string type);
 
 
 

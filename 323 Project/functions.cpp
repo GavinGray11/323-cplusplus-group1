@@ -264,9 +264,46 @@ bool findInteger(char integer) {
     }
 }
 
+int checkTable(vector<Symbol>& v2, string id) {
+    bool check = false;
+    for (int i = 0; i < v2.size(); i++) {
+        if (v2[i].identifier == id) {
+            check = true;
+            return i;
+        }
+        else {
+            check = false;
+        }
+    }
+    if (check == false) {
+        return -1;
+    }
+}
 
+void addSymbol(vector<Symbol>& v2, string id, string type) {
+    Symbol tempSymbol;
+    tempSymbol.identifier = id;
+    tempSymbol.type = type;
+    tempSymbol.memoryLoc = 5000;
+    if (v2.empty()) {
+        v2.push_back(tempSymbol);
+        return;
+    }
+    else {
+        for (int i = 0; i < v2.size(); i++) {
+            if (tempSymbol.memoryLoc < v2[i].memoryLoc) { //checking for gaps in memory storage
+                break;
+            }
+            else {
+                tempSymbol.memoryLoc = v2[i].memoryLoc + 1;
+            }
+        }
+        v2.push_back(tempSymbol);
+        return;
+    }
+}
 
-bool Parser(vector<TokenStruct> vec) {
+bool Parser(vector<TokenStruct> vec, vector<Symbol>& v2) {
     
     
     vector<TokenStruct> v;
@@ -294,8 +331,10 @@ bool Parser(vector<TokenStruct> vec) {
             i++;
             order.pop();
             out << endl;
-            out << v[i].tokenName << " \t" << "=" << " \t"
-                << v[i].token << endl;
+            if (v[i].token != "$") {
+                out << v[i].tokenName << " \t" << "=" << " \t"
+                    << v[i].token << endl;
+            }
         }
         else if (order.top() == ")") {
             out << "Error: missing end parenthesis" << endl;
@@ -310,6 +349,7 @@ bool Parser(vector<TokenStruct> vec) {
                 order.pop();
                 order.push("D");
                 out << "    <Statement> -> <Declerative>\n";
+
             }
             else if (v[i].tokenType == IDENTIFIER) {
                 order.pop();
@@ -347,10 +387,18 @@ bool Parser(vector<TokenStruct> vec) {
         }
         else if (order.top() == "D") {
             if (v[i].tokenType == KEYWORD) {
-                if (v[i + 1].tokenType == IDENTIFIER) {
+                if ((v[i + 1].tokenType == IDENTIFIER)) {
                     order.pop();
                     out << "    <Declarative> -> <Type> <ID>\n";
-                    i = i + 2;
+                    order.push(v[i+1].token);
+                    order.push(v[i].token);
+                    if (checkTable(v2, v[i + 1].token) == -1) {
+                        addSymbol(v2, v[i + 1].token, v[i].token);
+                    }
+                    else {
+                        out << "Symbol already declared at memory location: " << checkTable(v2, v[i + 1].token) << endl;
+                        return false;
+                    }
                 }
                 else {
                     out << "Error: expecting ID after type" << endl;

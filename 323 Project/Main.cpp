@@ -17,6 +17,7 @@ int main() {
 
     vector<TokenStruct> tokens;
     vector<TokenStruct> tokenLine;
+    vector<Symbol> Symbols;
     string fileInput;
     fstream infile;
     infile.open("Text.txt", ios::in);   
@@ -32,24 +33,31 @@ int main() {
         while (getline(infile, fileInput)) {
 
             tokenLine = Lexer(fileInput);
-            bool check = Parser(tokenLine);
+            bool check = Parser(tokenLine, Symbols);
 
             if (check) {
                 checker = true;
             }
             else {
                 checker = false;
+                break;
             }
         }
 
         if (checker) {
 
-            out << "Successful run!" << endl;
+            out << "Successful run!" << endl << endl;
+
+            out << "Identifier         MemoryLocation       Type" << endl;
+            for (int i = 0; i < Symbols.size(); i++) {
+                out << Symbols[i].identifier << "                      " << Symbols[i].memoryLoc << "              " 
+                    << Symbols[i].type << endl;
+            }
+
         }
         else {
 
             out <<  "Failed. See Errors" << endl;
-            
         }
 
         infile.close();

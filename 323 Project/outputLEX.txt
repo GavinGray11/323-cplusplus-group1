@@ -1,21 +1,16 @@
-IDENTIFIER 	= 	a
-    <Expression> -> <Term> <Expression>
-    <Term> -> <factor> < Term>
-    <Factor> -> <ID>
-OPERATOR 	= 	+
-    <Term> -> <Epsilon>
-    <Expression> -> <Expression> + <Term>
-
-IDENTIFIER 	= 	b
-    <Term> -> <factor> < Term>
-    <Factor> -> <ID>
-$ 	= 	$
-    <Term> -> <Epsilon>
-    <Expression> -> <Term>
-KEYWORD 	= 	bool
+KEYWORD 	= 	int
     <Statement> -> <Declerative>
     <Declarative> -> <Type> <ID>
-IDENTIFIER 	= 	f
+
+IDENTIFIER 	= 	a
+
+KEYWORD 	= 	int
+    <Statement> -> <Declerative>
+    <Declarative> -> <Type> <ID>
+
+IDENTIFIER 	= 	b
+
+IDENTIFIER 	= 	a
     <Statement> -> <Assign>
     <Assign> -> <ID> = <Expression>
 OPERATOR 	= 	=
@@ -40,58 +35,10 @@ SEPERATOR 	= 	)
     <Term> -> <Epsilon>
     <Expression> -> <Term>
 
-OPERATOR 	= 	+
-    <Term> -> <Epsilon>
-    <Expression> -> <Expression> + <Term>
-
-SEPERATOR 	= 	(
-    <Term> -> <factor> < Term>
-    <Factor> -> ( <Expression> )
-
-IDENTIFIER 	= 	c
-    <Expression> -> <Term> <Expression>
-    <Term> -> <factor> < Term>
-    <Factor> -> <ID>
-OPERATOR 	= 	-
-    <Term> -> <Epsilon>
-    <Expression> -> <Expression> - <Term>
-
-IDENTIFIER 	= 	d
-    <Term> -> <factor> < Term>
-    <Factor> -> <ID>
-SEPERATOR 	= 	)
-    <Term> -> <Epsilon>
-    <Expression> -> <Term>
-
-$ 	= 	$
-    <Term> -> <Epsilon>
-    <Expression> -> <Term>
-SEPERATOR 	= 	(
-    <Expression> -> <Term> <Expression>
-    <Term> -> <factor> < Term>
-    <Factor> -> ( <Expression> )
-
-IDENTIFIER 	= 	a
-    <Expression> -> <Term> <Expression>
-    <Term> -> <factor> < Term>
-    <Factor> -> <ID>
-OPERATOR 	= 	/
-    <Term> -> <Term> / <Factor>
-
-IDENTIFIER 	= 	b
-    <Factor> -> <ID>
-OPERATOR 	= 	+
-    <Term> -> <Epsilon>
-    <Expression> -> <Expression> + <Term>
-
-IDENTIFIER 	= 	c
-    <Term> -> <factor> < Term>
-    <Factor> -> <ID>
-SEPERATOR 	= 	)
-    <Term> -> <Epsilon>
-    <Expression> -> <Term>
-
-$ 	= 	$
     <Term> -> <Epsilon>
     <Expression> -> <Term>
 Successful run!
+
+Identifier         MemoryLocation       Type
+a                      5000              int
+b                      5001              int
