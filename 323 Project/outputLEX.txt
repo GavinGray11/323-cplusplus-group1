@@ -1,10 +1,10 @@
-KEYWORD 	= 	int
+KEYWORD 	= 	float
     <Statement> -> <Declerative>
     <Declarative> -> <Type> <ID>
 
 IDENTIFIER 	= 	a
 
-KEYWORD 	= 	int
+KEYWORD 	= 	float
     <Statement> -> <Declerative>
     <Declarative> -> <Type> <ID>
 
@@ -24,12 +24,10 @@ IDENTIFIER 	= 	a
     <Expression> -> <Term> <Expression>
     <Term> -> <factor> < Term>
     <Factor> -> <ID>
-OPERATOR 	= 	+
-    <Term> -> <Epsilon>
-    <Expression> -> <Expression> + <Term>
+OPERATOR 	= 	/
+    <Term> -> <Term> / <Factor>
 
 IDENTIFIER 	= 	b
-    <Term> -> <factor> < Term>
     <Factor> -> <ID>
 SEPERATOR 	= 	)
     <Term> -> <Epsilon>
@@ -40,5 +38,5 @@ SEPERATOR 	= 	)
 Successful run!
 
 Identifier         MemoryLocation       Type
-a                      5000              int
-b                      5001              int
+a                      5000              float
+b                      5001              float

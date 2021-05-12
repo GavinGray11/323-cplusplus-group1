@@ -1,3 +1,6 @@
-﻿  Main.cpp
-C:\Users\Jacob\Desktop\Projects\323Proj\323 Project\Main.cpp(52,31): warning C4018: '<': signed/unsigned mismatch
+﻿  functions.cpp
+C:\Users\Jacob\Desktop\Projects\323Proj\323 Project\functions.cpp(221,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jacob\Desktop\Projects\323Proj\323 Project\functions.cpp(269,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jacob\Desktop\Projects\323Proj\323 Project\functions.cpp(293,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jacob\Desktop\Projects\323Proj\323 Project\functions.cpp(281): warning C4715: 'checkTable': not all control paths return a value
   323 Project.vcxproj -> C:\Users\Jacob\Desktop\Projects\323Proj\323 Project\Debug\323 Project.exe

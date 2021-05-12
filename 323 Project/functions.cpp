@@ -304,7 +304,7 @@ void addSymbol(vector<Symbol>& v2, string id, string type) {
 }
 
 bool Parser(vector<TokenStruct> vec, vector<Symbol>& v2) {
-    
+
     
     vector<TokenStruct> v;
     v = vec;
@@ -318,6 +318,7 @@ bool Parser(vector<TokenStruct> vec, vector<Symbol>& v2) {
     order.push("$");
     order.push("S");
     int i = 0;
+    string currentType = "null";
 
     fstream out("outputLex.txt", ios::app);
     out << v[i].tokenName << " \t" << "=" << " \t"
@@ -389,14 +390,16 @@ bool Parser(vector<TokenStruct> vec, vector<Symbol>& v2) {
             if (v[i].tokenType == KEYWORD) {
                 if ((v[i + 1].tokenType == IDENTIFIER)) {
                     order.pop();
-                    out << "    <Declarative> -> <Type> <ID>\n";
-                    order.push(v[i+1].token);
-                    order.push(v[i].token);
                     if (checkTable(v2, v[i + 1].token) == -1) {
                         addSymbol(v2, v[i + 1].token, v[i].token);
+                        currentType = v[i].token;
+
+                        order.push(v[i + 1].token);
+                        order.push(v[i].token);
+                        out << "    <Declarative> -> <Type> <ID>\n";
                     }
                     else {
-                        out << "Symbol already declared at memory location: " << checkTable(v2, v[i + 1].token) << endl;
+                        out << "Symbol already declared at memory location: " << v2[checkTable(v2, v[i + 1].token)].memoryLoc << endl;
                         return false;
                     }
                 }
@@ -465,10 +468,28 @@ bool Parser(vector<TokenStruct> vec, vector<Symbol>& v2) {
             }
             else if (v[i].tokenType == 2) {
                 order.pop();
-                i++;
-                out << "    <Factor> -> <ID>" << endl;
-                out << v[i].tokenName << " \t" << "=" << " \t"
-                    << v[i].token << endl;
+                if (checkTable(v2, v[i].token) == -1) { //not found in memory
+                    out << "Error: Identifier not declared" << endl;
+                    return false;
+                }
+                else if (checkTable(v2, v[i].token) != -1 && currentType == "null") { //found in memory and first ID
+                    currentType = v2[checkTable(v2, v[i].token)].type;
+                    i++;
+                    out << "    <Factor> -> <ID>" << endl;
+                    out << v[i].tokenName << " \t" << "=" << " \t"
+                        << v[i].token << endl;
+                }
+                else if ((checkTable(v2, v[i].token) != -1) && (currentType != "null") && 
+                    (currentType == v2[checkTable(v2, v[i].token)].type)) { //found in memory and matches the correct type
+                    i++;
+                    out << "    <Factor> -> <ID>" << endl;
+                    out << v[i].tokenName << " \t" << "=" << " \t"
+                        << v[i].token << endl;
+                }
+                else {
+                    out << "Error: Identifier does not match the type in operation" << endl;
+                    return false;
+                }
             }
             else if (v[i].tokenType == 5 || v[i].tokenType == 6) {
                 order.pop();
